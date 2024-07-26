@@ -31,7 +31,7 @@ class QueryRunner:
     async def run_query(
         self, query_hash, semaphore, message, url, infores
     ) -> Tuple[int, Dict[str, dict], Dict[str, str]]:
-        """Generate and run a single TRAPI query against a component."""
+        """Generate and run a single TRAPI query"""
         # wait for opening in semaphore before sending next query
         responses = {}
         pks = {}
@@ -84,11 +84,8 @@ class QueryRunner:
                 }
 
         self.logger.debug(queries)
-        # send queries to a single type of component at a time
         tasks = []
         for query_hash, query in queries.items():
-            # component = "ara"
-            # loop over all specified components, i.e. ars, ara, kp, utilities
             semaphore = asyncio.Semaphore(concurrency)
             self.logger.info(f"Sending queries to {url}")
             tasks.append(

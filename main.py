@@ -77,10 +77,9 @@ def main(
     ] = "WARNING",
 ):
 
+    # use async method since queries are run asynchronously
     async def _main():
         tests = TestSuite.model_validate(download(suite, test_repo)).test_cases
-
-        # Then create test suite and run it
         qid = str(uuid4())[:8]
         logger = get_logger(qid, log_level)
 
