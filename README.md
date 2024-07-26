@@ -2,13 +2,16 @@
 A lean CLI tool for testing BioThings Explorer derived from NCATS TestHarness.
 
 ### Usage
+> [!IMPORTANT]
+> The `suite` should be present in `<source-repo>/test_suites` folder.
 ```bash
 pip install -r requirements.txt
 pip install ARS_Test_Runner-0.1.9/
-python main.py --url https://bte.ci.transltr.io/v1/query --test-repo NeuralFlux/NCATSTests --suite sprint_4_tests --output-json-path test-results.json --stats-json-path test-stats.json --report-csv-path test-results.csv
+python main.py --url https://bte.ci.transltr.io/v1/query --suite sprint_4_tests
 ```
 
-For option hints,
+
+You may change the source of test cases and export detailed outputs using
 ```bash
 python main.py --help
 ```

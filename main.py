@@ -15,9 +15,7 @@ from run import run_tests
 setup_logger()
 
 
-def download(
-    suite: str, test_repo: Optional[str] = "NCATSTranslator/Tests"
-) -> dict[str, Any]:
+def download(suite: str, test_repo: str) -> dict[str, Any]:
     download_url = f"https://raw.githubusercontent.com/{test_repo}/main/test_suites/"
     with httpx.Client(timeout=None) as client:
         file = client.get(f"{download_url}{suite}.json")
@@ -34,38 +32,36 @@ def main(
         str,
         typer.Option(help="The URL of the ARA to run tests against.", prompt=True),
     ],
-    test_repo: Annotated[
-        str,
-        typer.Option(help="The source of test cases.", prompt=True),
-    ],
     suite: Annotated[
         str,
         typer.Option(
             help="The name/id of the suite to be run. NOTE: must be in folder `test_suites` of the repo.",
         ),
     ],
+    summary_json_path: Annotated[
+        str,
+        typer.Option(help="The path to write the output summary.", prompt=True),
+    ] = "test-results.json",
+    test_repo: Annotated[
+        Optional[str],
+        typer.Option(help="The source of test cases. `<user>/<repo-name>`"),
+    ] = "NCATSTranslator/Tests",
     infores: Annotated[
         Optional[str],
         typer.Option(
             help="The infores of ARA to run tests against.",
         ),
     ] = "infores:biothings-explorer",
-    output_json_path: Annotated[
-        Optional[str],
-        typer.Option(
-            help="The path to write the output.",
-        ),
-    ] = None,
     stats_json_path: Annotated[
         Optional[str],
         typer.Option(
-            help="The path to write the stats JSON.",
+            help="The path to write the detailed stats JSON.",
         ),
     ] = None,
     report_csv_path: Annotated[
         Optional[str],
         typer.Option(
-            help="The path to write the CSV report.",
+            help="The path to write the detailed CSV report.",
         ),
     ] = None,
     log_level: Annotated[
@@ -97,9 +93,9 @@ def main(
 
         logger.info("Finishing up test run...")
 
-        if output_json_path is not None:
+        if summary_json_path is not None:
             logger.info("Saving report as JSON...")
-            with open(output_json_path, "w") as f:
+            with open(summary_json_path, "w") as f:
                 json.dump(report, f)
 
         logger.info("All tests have completed!")
